@@ -21,7 +21,7 @@ class CreateEmployeeData extends Data
     public static function rules(): array
     {
         return [
-            'role' => ['in:' . implode(',', array_keys(Employee::getRoleOptions()))],
+            'role' => ['required', 'in:' . implode(',', array_keys(Employee::getRoleOptions()))],
         ];
     }
 }
