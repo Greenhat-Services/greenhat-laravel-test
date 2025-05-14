@@ -13,7 +13,7 @@ class Employee extends Model
 {
     use CamelCasing;
 
-    protected $guarded = [];
+    protected $guarded = ['confirmation_email_sent_at'];
 
     public function user(): BelongsTo
     {

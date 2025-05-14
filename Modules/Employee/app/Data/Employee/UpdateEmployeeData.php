@@ -16,5 +16,6 @@ class UpdateEmployeeData extends Data
     public function __construct(
         public Employee $employee,
         public UpdateUserData|Optional $userData,
+        public string|\DateTimeInterface|Optional|null $confirmationEmailSentAt = null,
     ) {}
 }
