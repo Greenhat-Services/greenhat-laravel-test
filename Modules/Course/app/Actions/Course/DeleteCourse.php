@@ -12,7 +12,7 @@ class DeleteCourse
 
     public function handle(int $id): bool
     {
-        $course = Course::findOrFail($id);
+        $course = Course::find($id);
         if (! $course) {
             throw new CourseException("course not found", 404);
         }
