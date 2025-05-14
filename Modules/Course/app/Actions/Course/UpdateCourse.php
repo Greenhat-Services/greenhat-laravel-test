@@ -16,7 +16,7 @@ class UpdateCourse
         $course->update($data->except('course', 'category_ids')->toArray());
 
         if (!empty($data->category_ids)) {
-            $course->categories()->sync($data->category_ids);
+            $course->categories()->sync($data->categoryIds);
         }
 
         return $course->load('categories');

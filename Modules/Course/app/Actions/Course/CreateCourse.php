@@ -13,7 +13,7 @@ class CreateCourse
     public function handle(CreateCourseData $data): Course
     {
         $course = Course::create($data->except('category_ids')->toArray());
-        $course->categories()->sync($data->category_ids);
+        $course->categories()->sync($data->categoryIds);
 
         return $course->load('categories');
     }

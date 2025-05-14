@@ -18,7 +18,7 @@ class CreateCourseData extends Data
         public string $description,
         public ?string $status = "draft",
         #[Required, ArrayType, Exists('categories', 'id')]
-        public array $category_ids,
+        public array $categoryIds,
     ) {}
 
     public static function rules(): array

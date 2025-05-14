@@ -24,7 +24,7 @@ class UpdateCourseData extends Data
         public string|Optional $status,
 
         #[ArrayType, Exists('categories', 'id')]
-        public array|Optional $category_ids,
+        public array|Optional $categoryIds,
     ) {}
 
     public static function rules(): array
