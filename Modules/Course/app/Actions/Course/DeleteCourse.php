@@ -3,15 +3,33 @@
 namespace Modules\Course\Actions\Course;
 
 use Lorisleiva\Actions\Concerns\AsAction;
+use Modules\Course\Exceptions\CourseException;
 use Modules\Course\Models\Course;
 
 class DeleteCourse
 {
     use AsAction;
 
-    public function handle(Course $course): void
+    public function handle(int $id): bool
     {
+        $course = Course::findOrFail($id);
+        if (! $course) {
+            throw new CourseException("course not found", 404);
+        }
+
         $course->categories()->detach();
-        $course->delete();
+        return $course->delete();
+    }
+    public function asController(int $id): bool
+    {
+        return $this->handle($id);
+    }
+    public function jsonResponse(bool $deleted): \Illuminate\Http\JsonResponse
+    {
+
+        return response()->json([
+            'success' => $deleted,
+            'message' => $deleted ? 'Course deleted successfully.' : 'Failed to delete course.'
+        ]);
     }
 }

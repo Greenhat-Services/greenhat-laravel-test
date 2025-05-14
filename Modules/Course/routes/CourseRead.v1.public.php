@@ -3,4 +3,4 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Course\Actions\Course\GetCourse;
 
-Route::get('/Course/{CourseId}', GetCourse::class);
+Route::get('/course/{CourseId}', GetCourse::class);
