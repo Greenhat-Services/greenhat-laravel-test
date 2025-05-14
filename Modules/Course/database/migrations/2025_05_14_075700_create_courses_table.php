@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('status')->default('draft');
+            $table->string('status');
             $table->softDeletes();
             $table->timestamps();
         });

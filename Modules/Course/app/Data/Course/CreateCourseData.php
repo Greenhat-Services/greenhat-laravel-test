@@ -8,6 +8,7 @@ use Spatie\LaravelData\Data;
 use Modules\Course\Models\Course;
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
 use Spatie\LaravelData\Attributes\Validation\Exists;
+use Spatie\LaravelData\Attributes\Validation\In;
 
 class CreateCourseData extends Data
 {
@@ -16,7 +17,8 @@ class CreateCourseData extends Data
     public function __construct(
         public string $title,
         public string $description,
-        public ?string $status = "draft",
+        #[Required]
+        public string $status,
         #[Required, ArrayType, Exists('categories', 'id')]
         public array $categoryIds,
     ) {}
@@ -24,7 +26,7 @@ class CreateCourseData extends Data
     public static function rules(): array
     {
         return [
-            'status' => ['in:' . implode(',', array_keys(Course::getStatusOptions()))],
+            'status' => ['required','in:' . implode(',', array_keys(Course::getStatusOptions()))],
         ];
     }
 }

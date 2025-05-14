@@ -13,7 +13,7 @@ class UpdateCourse
     public function handle(UpdateCourseData $data): Course
     {
         $course = $data->course;
-        $course->update($data->except('course', 'category_ids')->toArray());
+        $course->update($data->except('course', 'categoryIds')->toArray());
 
         if (!empty($data->category_ids)) {
             $course->categories()->sync($data->categoryIds);
