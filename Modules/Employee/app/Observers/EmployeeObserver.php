@@ -2,7 +2,7 @@
 
 namespace Modules\Employee\Observers;
 
-use Modules\Employee\Jobs\SendEmployeeConfirmationEmail;
+use Modules\Employee\Jobs\SendEmployeeConfirmationEmailJob;
 use Modules\Employee\Models\Employee;
 use Modules\User\Actions\User\AssignRoleToUser;
 
@@ -10,7 +10,7 @@ class EmployeeObserver
 {
     public function created(Employee $model): void
     {
-        SendEmployeeConfirmationEmail::dispatch($model);
+        SendEmployeeConfirmationEmailJob::dispatch($model);
     }
 
     public function saved(Employee $model): void
