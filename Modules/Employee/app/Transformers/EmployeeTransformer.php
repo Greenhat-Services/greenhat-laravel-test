@@ -21,6 +21,9 @@ class EmployeeTransformer extends TransformerAbstract
             'id' => $model->getKey(),
             'userId' => $model->userId,
             'role' => $model->role,
+            'highestQualification' => $model->highestQualification,
+            'desiredSalary' => $model->desiredSalary,
+            'confirmationEmailSentAt' => $model->confirmationEmailSentAt,
             'createdAt' => $model->createdAt,
             'updatedAt' => $model->updatedAt,
         ];

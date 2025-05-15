@@ -25,7 +25,6 @@ trait ModuleRoutes
 
             try {
                 [$name, $version, $visibility] = explode('.', $file->getFilename());
-
             } catch (Exception $exception) {
                 return;
             }
@@ -34,11 +33,12 @@ trait ModuleRoutes
                 return;
             }
 
-            $route = Route::prefix($version)->name($name.'_'.$version);
+            $route = Route::prefix($version)->name($name . '_' . $version);
 
             $middlewares = match ($visibility) {
                 'html', 'webhook' => [],
                 'private' => [
+                    JsonResponseMiddleware::class,
                     'auth:sanctum',
                 ],
                 'public' => [
