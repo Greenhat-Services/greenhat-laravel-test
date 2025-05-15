@@ -8,21 +8,14 @@ use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Modules\Course\Exceptions\CourseException;
 use Modules\Course\Models\Course;
+use Modules\Course\Transformers\CourseTransformer;
+use Spatie\Fractal\Fractal;
 
 class GetCourse
 {
     use AsAction;
 
-    public function handle(int $id): Course
-    {
-        $course = Course::with('categories')->find($id);
-        if (! $course) {
-            throw new CourseException("course not found", 404);
-        }
-
-        return $course;
-    }
-    public function asController(ActionRequest $request): Course
+    public function asController(ActionRequest $request): Fractal
     {
         $course = Course::find($request->route('courseId'));
 
@@ -30,6 +23,11 @@ class GetCourse
             throw new CourseException('Course not found', 404);
         }
 
-        return $course;
+        return $this->jsonResponse($course);
+    }
+
+    public function jsonResponse(Course $course): Fractal
+    {
+        return fractal($course, CourseTransformer::class);
     }
 }
