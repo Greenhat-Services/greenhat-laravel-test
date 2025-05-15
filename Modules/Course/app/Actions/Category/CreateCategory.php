@@ -23,7 +23,12 @@ class CreateCategory
 
     public function authorize(ActionRequest $request): bool
     {
-        return $request->user()->isA('admin');
+        $isAuthorized = $request->user()->isA('admin');
+        if (! $isAuthorized) {
+            throw new CourseException('Unauthorized', 403);
+        }
+
+        return $isAuthorized;
     }
 
     public function asController(ActionRequest $request): Category

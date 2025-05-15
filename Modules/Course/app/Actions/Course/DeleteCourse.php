@@ -26,7 +26,12 @@ class DeleteCourse
         }
         $request->merge(['course' => $course]);
 
-        return $request->user()->isA('admin');
+        $isAuthorized = $request->user()->isA('admin');
+        if (! $isAuthorized) {
+            throw new CourseException('Unauthorized', 403);
+        }
+
+        return $isAuthorized;
     }
 
     public function asController(ActionRequest $request): \Illuminate\Http\JsonResponse
