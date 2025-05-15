@@ -15,24 +15,14 @@ class CreateEmployeeCourseEnrollmentData extends Data
 
     public function __construct(
         public Employee $employee,
-        public array $courseIds,
+        public int $courseId,
     ) {}
 
     public static function rules(): array
     {
         return [
-            'courseIds' => ['required', 'array'],
-            'courseIds.*' => ['required', 'integer', 'exists:courses,id'],
+            'courseId' => ['required', 'integer', 'exists:courses,id'],
 
-        ];
-    }
-    public static function messages(): array
-    {
-        return [
-            'courseIds.required' => 'You must select at least one course.',
-            'courseIds.array' => 'The courses field must be an array.',
-            'courseIds.*.integer' => 'Each course ID must be an integer.',
-            'courseIds.*.exists' => 'One or more selected courses do not exist.',
         ];
     }
 }

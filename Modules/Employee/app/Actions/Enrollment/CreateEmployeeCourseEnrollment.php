@@ -4,6 +4,7 @@ namespace Modules\Employee\Actions\Enrollment;
 
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Modules\Course\Models\Course;
 use Modules\Employee\Data\Enrollment\CreateEmployeeCourseEnrollmentData;
 use Modules\Employee\Exceptions\EmployeeException;
 use Modules\Employee\Models\Employee;
@@ -17,7 +18,8 @@ class CreateEmployeeCourseEnrollment
     public function handle(CreateEmployeeCourseEnrollmentData $data): Employee
     {
         $employee = $data->employee;
-        $employee->courses()->syncWithoutDetaching($data->courseIds);
+        Course::find($data->courseId) ?? throw new EmployeeException('Course not found', 404);
+        $employee->courses()->syncWithoutDetaching($data->courseId);
 
         return $employee->load('courses');
     }
@@ -26,7 +28,7 @@ class CreateEmployeeCourseEnrollment
     {
         $employee = Employee::find($request->route('employeeId'));
 
-        if(! $employee) {
+        if (! $employee) {
             throw new EmployeeException('Employee not found', 404);
         }
 
