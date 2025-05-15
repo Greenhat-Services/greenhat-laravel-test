@@ -2,6 +2,7 @@
 
 namespace Modules\Course\Actions\Category;
 
+use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Modules\Course\Exceptions\CourseException;
 use Modules\Course\Models\Category;
@@ -11,19 +12,29 @@ class DeleteCategory
 {
     use AsAction;
 
-    public function handle(int $id): bool
+    public function handle(Category $category): bool
     {
-        $category = Category::find($id);
-        if (! $category) {
-            throw new CourseException("category not found", 404);
-        }
-
         $category->courses()->detach();
         return $category->delete();
     }
-    public function asController(int $id): bool
+
+    public function authorize(ActionRequest $request): bool
     {
-        return $this->handle($id);
+        $category = Category::find($request->route('categoryId'));
+
+        if (! $category) {
+            throw new CourseException('Category not found', 404);
+        }
+
+        $request->merge(['category' => $category]);
+        return $request->user()->isA('admin');
+    }
+
+    public function asController(ActionRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $deleted = $this->handle($request->category);
+
+        return $this->jsonResponse($deleted);
     }
     public function jsonResponse(bool $deleted): \Illuminate\Http\JsonResponse
     {

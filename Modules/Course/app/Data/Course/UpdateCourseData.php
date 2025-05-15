@@ -4,7 +4,6 @@ namespace Modules\Course\Data\Course;
 
 use Illuminate\Support\Optional;
 use Modules\Base\Traits\LaravelDataHelper;
-use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 use Modules\Course\Models\Course;
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
@@ -19,12 +18,9 @@ class UpdateCourseData extends Data
 
         public string|Optional $title,
 
-        public string|Optional|null $description,
+        public string|Optional $description,
 
         public string|Optional $status,
-
-        #[ArrayType, Exists('categories', 'id')]
-        public array|Optional $categoryIds,
     ) {}
 
     public static function rules(): array

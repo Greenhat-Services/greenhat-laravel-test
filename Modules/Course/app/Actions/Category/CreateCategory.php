@@ -5,6 +5,7 @@ namespace Modules\Course\Actions\Category;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Modules\Course\Data\Category\CreateCategoryData;
+use Modules\Course\Exceptions\CourseException;
 use Modules\Course\Models\Category;
 use Modules\Course\Transformers\CategoryTransformer;
 use Spatie\Fractal\Fractal;
@@ -18,6 +19,11 @@ class CreateCategory
         $category = Category::create($data->only('name')->toArray());
 
         return $category;
+    }
+
+    public function authorize(ActionRequest $request): bool
+    {
+        return $request->user()->isA('admin');
     }
 
     public function asController(ActionRequest $request): Category
