@@ -5,19 +5,27 @@ namespace Modules\Employee\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Notifications\Notifiable;
 use Modules\Base\Traits\CamelCasing;
+use Modules\Course\Models\Course;
 use Modules\User\Models\User;
 
 class Employee extends Model
 {
-    use CamelCasing;
+    use CamelCasing, Notifiable;
 
     protected $guarded = [];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_employee');
     }
 
     public function authenticationLogs(): MorphMany
@@ -35,7 +43,12 @@ class Employee extends Model
     public function username(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->user->name,
+            get: fn($value) => $this->user->name,
         );
+    }
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->user?->email;
     }
 }

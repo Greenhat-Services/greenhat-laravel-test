@@ -1,0 +1,17 @@
+<?php
+
+namespace Modules\Course\Providers;
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Modules\Base\Traits\ModuleRoutes;
+
+class RouteServiceProvider extends ServiceProvider
+{
+    use ModuleRoutes;
+
+    protected function getRouteDirectory(): string
+    {
+        return __DIR__.'/../../routes';
+    }
+}

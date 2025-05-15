@@ -39,6 +39,7 @@ trait ModuleRoutes
             $middlewares = match ($visibility) {
                 'html', 'webhook' => [],
                 'private' => [
+                    JsonResponseMiddleware::class,
                     'auth:sanctum',
                 ],
                 'public' => [
