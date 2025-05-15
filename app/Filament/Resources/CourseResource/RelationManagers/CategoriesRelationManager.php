@@ -29,26 +29,34 @@ class CategoriesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->sortable(), // Keep sorting if needed
+                Tables\Columns\TextColumn::make('name'),
             ])
-            ->filters([])
+            ->filters([
+                Tables\Filters\TrashedFilter::make()
+            ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->modifyQueryUsing(function (Builder $query) {
-                // 👇 Explicitly set the order by to categories.id
-                return $query->select('categories.*')
-                    ->orderBy('categories.id', 'desc');
+                return $query
+                    ->withoutGlobalScopes([
+                        SoftDeletingScope::class,
+                    ])
+                    ->select('categories.*') // Fix ambiguous "id" error
+                    ->orderBy('categories.id', 'desc'); // Explicit ordering
             });
     }
 }

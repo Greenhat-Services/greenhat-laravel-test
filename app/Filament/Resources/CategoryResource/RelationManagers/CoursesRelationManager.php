@@ -29,11 +29,10 @@ class CoursesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->sortable(), // Keep sorting if needed
+                Tables\Columns\TextColumn::make('title'),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make()
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
@@ -41,16 +40,23 @@ class CoursesRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->modifyQueryUsing(function (Builder $query) {
-                // 👇 Explicitly set the order by to corses.id
-                return $query->select('courses.*')
-                    ->orderBy('courses.id', 'desc');
+                return $query
+                    ->withoutGlobalScopes([
+                        SoftDeletingScope::class,
+                    ])
+                    ->select('courses.*') // Fix ambiguous "id" error
+                    ->orderBy('courses.id', 'desc'); // Explicit ordering
             });
     }
 }
