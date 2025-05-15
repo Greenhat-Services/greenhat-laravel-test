@@ -27,7 +27,7 @@ class CreateEmployeeCourseEnrollment
         if ($employee->courses->contains($course->id)) {
             throw new EmployeeException('Employee already enrolled in this course', 409);
         }
-        
+
         $employee->courses()->syncWithoutDetaching($data->courseId);
 
         $employee->notify(new EmployeeCourseEnrollmentNotification($course));
