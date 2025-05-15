@@ -28,6 +28,12 @@ class CreateEmployee
         return $employee;
     }
 
+    public function authorize(ActionRequest $request): bool
+    {
+
+        return $request->user()->isA('admin');
+    }
+
     public function asController(ActionRequest $request): Employee
     {
         $data = CreateEmployeeData::validateAndCreate($request->all());
