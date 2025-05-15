@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Notifications\Notifiable;
 use Modules\Base\Traits\CamelCasing;
 use Modules\Course\Models\Course;
 use Modules\User\Models\User;
 
 class Employee extends Model
 {
-    use CamelCasing;
+    use CamelCasing, Notifiable;
 
     protected $guarded = [];
 
@@ -42,7 +43,12 @@ class Employee extends Model
     public function username(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->user->name,
+            get: fn($value) => $this->user->name,
         );
+    }
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->user?->email;
     }
 }

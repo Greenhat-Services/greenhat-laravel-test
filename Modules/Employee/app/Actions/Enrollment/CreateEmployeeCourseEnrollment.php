@@ -8,6 +8,7 @@ use Modules\Course\Models\Course;
 use Modules\Employee\Data\Enrollment\CreateEmployeeCourseEnrollmentData;
 use Modules\Employee\Exceptions\EmployeeException;
 use Modules\Employee\Models\Employee;
+use Modules\Employee\Notifications\EmployeeCourseEnrollmentNotification;
 use Modules\Employee\Transformers\EmployeeTransformer;
 use Spatie\Fractal\Fractal;
 
@@ -18,9 +19,14 @@ class CreateEmployeeCourseEnrollment
     public function handle(CreateEmployeeCourseEnrollmentData $data): Employee
     {
         $employee = $data->employee;
-        Course::find($data->courseId) ?? throw new EmployeeException('Course not found', 404);
+        $course = Course::find($data->courseId);
+        if (! $course) {
+            throw new EmployeeException('Course not found', 404);
+        }
+
         $employee->courses()->syncWithoutDetaching($data->courseId);
 
+        $employee->notify(new EmployeeCourseEnrollmentNotification($course));
         return $employee->load('courses');
     }
 
