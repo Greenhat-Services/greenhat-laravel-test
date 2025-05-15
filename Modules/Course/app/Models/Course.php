@@ -45,6 +45,13 @@ class Course extends Model
     }
 
     // filter by category
+    public function scopeFilterByCategory($query, $category): Builder
+    {
+        return $query->whereHas('categories', function ($q) use ($category) {
+            $q->where('name', $category);
+        });
+    }
+    // filter by status
     public function scopeFilterByStatus($query, $status): Builder
     {
         return $query->where('status', $status);

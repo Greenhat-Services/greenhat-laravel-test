@@ -13,7 +13,7 @@ class GetCategory
 {
     use AsAction;
 
-    public function asController(ActionRequest $request): Fractal
+    public function asController(ActionRequest $request): Category
     {
         $category = Category::find($request->route('categoryId'));
 
@@ -21,7 +21,7 @@ class GetCategory
             throw new CourseException('Category not found', 404);
         }
 
-        return $this->jsonResponse($category);
+        return $category;
     }
 
     public function jsonResponse(Category $category): Fractal

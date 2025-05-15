@@ -34,11 +34,11 @@ class DeleteCourse
         return $isAuthorized;
     }
 
-    public function asController(ActionRequest $request): \Illuminate\Http\JsonResponse
+    public function asController(ActionRequest $request): bool
     {
         $deleted = $this->handle($request->course);
 
-        return $this->jsonResponse($deleted);
+        return $deleted;
     }
     public function jsonResponse(bool $deleted): \Illuminate\Http\JsonResponse
     {

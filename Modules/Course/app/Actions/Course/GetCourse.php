@@ -15,7 +15,7 @@ class GetCourse
 {
     use AsAction;
 
-    public function asController(ActionRequest $request): Fractal
+    public function asController(ActionRequest $request): Course
     {
         $course = Course::find($request->route('courseId'));
 
@@ -23,7 +23,7 @@ class GetCourse
             throw new CourseException('Course not found', 404);
         }
 
-        return $this->jsonResponse($course);
+        return $course;
     }
 
     public function jsonResponse(Course $course): Fractal

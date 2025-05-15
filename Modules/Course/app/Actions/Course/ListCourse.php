@@ -13,12 +13,13 @@ class ListCourse
 {
     use AsAction;
 
-    public function handle(ActionRequest $request): Fractal
+    public function handle(ActionRequest $request): Collection
     {
         $courses = Course::when($request->filled('search'), fn($query) => $query->search($request->search))
             ->when($request->filled('status'), fn($query) => $query->FilterByStatus($request->status))
+            ->when($request->filled('category'), fn($query) => $query->FilterByCategory($request->category))
             ->get();
-        return $this->jsonResponse($courses);
+        return $courses;
     }
 
     public function jsonResponse(Collection $courses): Fractal
