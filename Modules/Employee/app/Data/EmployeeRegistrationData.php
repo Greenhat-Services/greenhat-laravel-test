@@ -2,33 +2,41 @@
 
 namespace Modules\Employee\Data;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Attributes\Validation\Rule;
+use Illuminate\Validation\Rule as ValidationRule;
+use Spatie\LaravelData\Support\Validation\ValidationContext;
 
 class EmployeeRegistrationData extends Data
 {
+
     public function __construct(
-        #[Rule('required|string|max:255')]
         public string $first_name,
-
-        #[Rule('required|string|max:255')]
         public string $last_name,
-
-        #[Rule('required|email|unique:users,email')]
         public string $email,
-
-        #[Rule('required|string')]
         public string $role,
-
-        #[Rule('required|string')]
         public string $highest_qualification,
-
-        #[Rule('required|integer|min:0')]
         public int $desired_salary,
-
-        #[Rule('nullable|string')]
         public ?string $note,
-
-        #[Rule('required|string|in:ACME')] // Validates the special codew
         public string $special_code,
     ) {}
+
+    /**
+     * This class defines the data structure for employee registration. Uses Spatie Laravel Data to automatically validate and transform the data
+     * spatie rules method is used to define the validation rules for the data.
+     * Moved the special code to config file.
+     * using this config file, we can easily change the special code without changing the code or hardcoding it.
+     */
+
+     public static function rules(ValidationContext $context): array
+     {
+         return [
+             'first_name' => ['required', 'string', 'max:255'],
+             'last_name' => ['required', 'string', 'max:255'],
+             'email' => ['required', 'email', 'unique:users,email'],
+             'role' => ['required', 'string'],
+             'highest_qualification' => ['required', 'string'],
+             'desired_salary' => ['required', 'integer', 'min:0'],
+             'note' => ['nullable', 'string'],
+             'special_code' => ['required', 'string', ValidationRule::in([config('employee.registration_code')])],
+         ];
+     }
 }
