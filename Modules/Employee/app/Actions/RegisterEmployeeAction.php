@@ -11,6 +11,7 @@ use Modules\Employee\Models\Employee;
 use Modules\Employee\Transformers\EmployeeTransformer;
 use Modules\User\Models\User;
 use Spatie\Fractal\Fractal;
+use Modules\Employee\Actions\Emails\SendConfirmationEmail; 
 
 
 class RegisterEmployeeAction
@@ -44,10 +45,13 @@ class RegisterEmployeeAction
                 'note' => $data->note,
             ]);
 
-            // My apporach is to temporarily attach the plain-text password to the employee model.
-            // This allows the EmployeeObserver to access it to send the confirmation email.
 
-            $employee->plain_text_password = $password;
+
+            // A new, dedicated, and queueable `SendConfirmationEmail` action was created to handle the email and timestamp update.
+            // The `SendConfirmationEmail` action is dispatched using Laravel's queue system.
+
+
+            SendConfirmationEmail::dispatch($employee, $password);
 
             return $employee;
         });
