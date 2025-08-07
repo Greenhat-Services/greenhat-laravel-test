@@ -16,16 +16,21 @@ use Modules\Employee\Models\Employee;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Stephenjude\FilamentTwoFactorAuthentication\TwoFactorAuthenticatable;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class User extends Authenticatable implements FilamentUser
 {
     use AuthenticationLoggable,
         CamelCasing,
         HasApiTokens,
+        HasFactory,
         HasRolesAndAbilities,
         Notifiable,
         SoftDeletes,
         TwoFactorAuthenticatable;
+
 
     protected $guarded = [];
 
@@ -55,5 +60,13 @@ class User extends Authenticatable implements FilamentUser
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class);
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): UserFactory // this is the factory for the model
+    {
+        return UserFactory::new();
     }
 }

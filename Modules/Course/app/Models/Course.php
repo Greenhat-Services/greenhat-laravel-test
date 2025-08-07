@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Base\Traits\CamelCasing;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Modules\Employee\Models\Employee;
+use Modules\Course\Database\Factories\CourseFactory;
 // use Modules\Course\Database\Factories\CourseFactory;
 
 class Course extends Model
 {
-    use CamelCasing;
+    use CamelCasing, HasFactory;
     protected $guarded = [];
 
     /**
@@ -20,7 +21,7 @@ class Course extends Model
 
      public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(CourseCategory::class, 'category_course');
+        return $this->belongsToMany(CourseCategory::class, 'category_course', 'course_id', 'category_id');
     }
 
     /**
@@ -28,6 +29,11 @@ class Course extends Model
      */
     public function employees(): BelongsToMany
     {
-        return $this->belongsToMany(Employee::class, 'course_employee');
+        return $this->belongsToMany(Employee::class, 'course_employee', 'course_id', 'employee_id');
+    }
+
+    protected static function newFactory(): CourseFactory // this is the factory for the model
+    {
+        return CourseFactory::new();
     }
 }

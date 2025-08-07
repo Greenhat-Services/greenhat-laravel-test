@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Modules\User\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Modules\Course\Database\Seeders\CourseDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,5 +20,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        $this->call(CourseDatabaseSeeder::class);
     }
 }
