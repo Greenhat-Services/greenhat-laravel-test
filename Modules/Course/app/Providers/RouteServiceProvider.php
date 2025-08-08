@@ -25,6 +25,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map(): void
     {
         $this->mapApiRoutes();
+        $this->mapPrivateV1Routes();
         $this->mapWebRoutes();
     }
 
@@ -46,5 +47,12 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes(): void
     {
         Route::middleware('api')->prefix('api')->name('api.')->group(module_path($this->name, '/routes/api.php'));
+    }
+
+    protected function mapPrivateV1Routes(): void
+    {
+        Route::middleware(['auth:sanctum'])
+            ->prefix('v1')
+            ->group(module_path($this->name, '/routes/CourseEnrollment.v1.private.php'));
     }
 }
