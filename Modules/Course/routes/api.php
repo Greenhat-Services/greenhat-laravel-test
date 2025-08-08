@@ -16,4 +16,7 @@ use Modules\Course\Http\Controllers\CourseController;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::apiResource('course', CourseController::class)->names('course');
+
+    // Enrollment route
+    require __DIR__ . '/CourseEnrollment.v1.private.php';
 });
