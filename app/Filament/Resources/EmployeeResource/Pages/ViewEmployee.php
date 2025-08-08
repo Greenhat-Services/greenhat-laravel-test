@@ -7,9 +7,11 @@ use App\Filament\Resources\EmployeeResource;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Pages\Concerns\HasRelationManagers;
 
 class ViewEmployee extends ViewRecord
 {
+    use HasRelationManagers; 
     protected static string $resource = EmployeeResource::class;
 
     protected static ?string $title = 'View';

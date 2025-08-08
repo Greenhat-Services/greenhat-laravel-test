@@ -4,6 +4,7 @@ namespace Modules\Course\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -51,7 +52,7 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapPrivateV1Routes(): void
     {
-        Route::middleware(['auth:sanctum'])
+        Route::middleware(['auth:sanctum', 'throttle:api', SubstituteBindings::class])
             ->prefix('v1')
             ->group(module_path($this->name, '/routes/CourseEnrollment.v1.private.php'));
     }

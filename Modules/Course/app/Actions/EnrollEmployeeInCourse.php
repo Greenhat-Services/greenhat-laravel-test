@@ -24,11 +24,16 @@ class EnrollEmployeeInCourse{
 
      public function handle(Course $course, Employee $employee): bool
     {
+
+        $courseId = (int) $course->getKey(); 
+        if (! $courseId) {
+            abort(404, 'Course not found');      
+        }
         // Check if the employee is already enrolled in the course
         // syncWithoutDetaching() is used to avoid duplicate entries
         //Safetly creates the link and prevents errors if the employee is already enrolled in the course
-        $changes = $employee->courses()->syncWithoutDetaching([$course->id]);
-        $justAttached = in_array($course->id, $changes['attached'] ?? [], true);
+        $changes = $employee->courses()->syncWithoutDetaching([$courseId]);
+        $justAttached = in_array($courseId, $changes['attached'] ?? [], true);
 
         // Dispatch Notfication to the employee
         // This is a queued job that will be processed in the background
@@ -51,7 +56,7 @@ class EnrollEmployeeInCourse{
         $enrolledNow = $this->handle($course, $employee);
 
         $payload = [
-            'course'       => ['id' => $course->id, 'title' => $course->title, 'status' => $course->status ?? null],
+            'course'       => ['id' => (int) $course->getKey(), 'title' => $course->title, 'status' => $course->status ?? null],
             'employee'     => ['id' => $employee->id, 'name' => $employee->user->name],
             'enrolled_now' => $enrolledNow,
         ];

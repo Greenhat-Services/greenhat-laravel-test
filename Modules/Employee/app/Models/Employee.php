@@ -46,6 +46,6 @@ class Employee extends Model
      */
     public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class, 'course_employee', 'employee_id', 'course_id');
+        return $this->belongsToMany(Course::class, 'course_employee', 'employee_id', 'course_id')->withTimestamps();
     }
 }

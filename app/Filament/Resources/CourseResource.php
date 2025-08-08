@@ -20,6 +20,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use App\Filament\Resources\CourseResource\RelationManagers\EmployeesRelationManager;
+use Filament\Tables\Actions\ViewAction;
 
 class CourseResource extends Resource
 {
@@ -60,10 +62,16 @@ class CourseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort('employees_count', 'desc')
         ->columns([
             TextColumn::make('id')->sortable(),
             TextColumn::make('title')->searchable(),
             TextColumn::make('status')->searchable(),
+            TextColumn::make('employees_count')       
+            ->label('Enrolled')
+            ->counts('employees')                 // auto adds withCount('employees')
+            ->badge()
+            ->sortable(),
             TextColumn::make('updated_at')->dateTime()->sortable(),
         ])
         ->filters([
@@ -76,6 +84,7 @@ class CourseResource extends Resource
                 ]),
         ])
         ->actions([
+            ViewAction::make(),
             EditAction::make(),
         ])
         ->bulkActions([
@@ -88,7 +97,7 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EmployeesRelationManager::class,
         ];
     }
 
@@ -97,7 +106,13 @@ class CourseResource extends Resource
         return [
             'index' => Pages\ListCourses::route('/'),
             'create' => Pages\CreateCourse::route('/create'),
+            'view'   => Pages\ViewCourse::route('/{record}'),
             'edit' => Pages\EditCourse::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+{
+    return (string) Course::count();
+}
 }

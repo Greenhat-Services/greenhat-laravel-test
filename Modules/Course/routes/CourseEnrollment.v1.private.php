@@ -9,5 +9,5 @@ use Modules\Course\Actions\EnrollEmployeeInCourse;
  * 
  */
 
- Route::post('/courses/{course}/enroll', EnrollEmployeeInCourse::class)
+ Route::post('/courses/{course:id}/enroll', EnrollEmployeeInCourse::class)
  ->name('courses.enroll');

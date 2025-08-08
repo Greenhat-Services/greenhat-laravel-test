@@ -29,7 +29,7 @@ class Course extends Model
      */
     public function employees(): BelongsToMany
     {
-        return $this->belongsToMany(Employee::class, 'course_employee', 'course_id', 'employee_id');
+        return $this->belongsToMany(Employee::class, 'course_employee', 'course_id', 'employee_id')->withTimestamps();
     }
 
     protected static function newFactory(): CourseFactory // this is the factory for the model

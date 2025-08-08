@@ -14,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Modules\Employee\Models\Employee;
+use App\Filament\Resources\EmployeeResource\RelationManagers\CoursesRelationManager;
 
 class EmployeeResource extends Resource
 {
@@ -124,8 +125,8 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
-        ];
+            CoursesRelationManager::class, // for managing the courses relation
+        ]; 
     }
 
     public static function getRecordSubNavigation(Page $page): array
