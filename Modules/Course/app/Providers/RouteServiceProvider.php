@@ -52,8 +52,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapPrivateV1Routes(): void
     {
-        Route::middleware(['auth:sanctum', 'throttle:api', SubstituteBindings::class])
-            ->prefix('v1')
+        Route::middleware(['auth:sanctum', 'throttle:api', SubstituteBindings::class]) // throttle:api is the custom throttle middleware
+            ->prefix('v1') // prefix for the routes
             ->group(module_path($this->name, '/routes/CourseEnrollment.v1.private.php'));
     }
 }
