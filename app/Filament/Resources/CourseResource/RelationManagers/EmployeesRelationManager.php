@@ -36,7 +36,7 @@ class EmployeesRelationManager extends RelationManager
             ->bulkActions([]);  // read-only
     }
 
-    // Extra safety on some Filament versions (instance methods):
+    // Extra safety to prevent any actions on the relation
     public function canCreate(): bool   { return false; }
     public function canEdit($record): bool   { return false; }
     public function canDelete($record): bool { return false; }

@@ -34,7 +34,7 @@ class CourseCategoryResource extends Resource
             // Field for the category's name
             TextInput::make('name')
                 ->required()
-                ->unique(ignoreRecord: true) // Unique
+                ->unique(ignoreRecord: true) // to make sure the name is unique
                 ->maxLength(255),
 
             // Field for the category's description
@@ -53,7 +53,7 @@ class CourseCategoryResource extends Resource
             // Column for the name, searchable
             TextColumn::make('name')->searchable(),
 
-            // Column for pdate time
+            // Column for Uppdate time
             TextColumn::make('updated_at')->dateTime()->sortable(),
         ])
         ->actions([

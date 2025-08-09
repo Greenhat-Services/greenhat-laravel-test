@@ -62,7 +62,7 @@ class CourseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->defaultSort('employees_count', 'desc')
+        ->defaultSort('employees_count', 'desc') // default sort by the number of employees enrolled in the course
         ->columns([
             TextColumn::make('id')->sortable(),
             TextColumn::make('title')->searchable(),
