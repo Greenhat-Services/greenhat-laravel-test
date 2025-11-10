@@ -28,7 +28,10 @@ Capture and store in the `employees` table:
 Create and send a confirmation email to newly registered employees
 
 #### 4. Track Email Confirmation
-   Update the confirmation_email_sent_at column in the employees table once the email is sent
+Update the confirmation_email_sent_at column in the employees table once the email is sent
+
+#### 5. UI Implementation (Bonus)
+Using any Javascript framework that you are familiar with such as Vue.js, React and UI components libraries to implement the UI.
 
 ## How We'll Evaluate Your Work
 Feel free to approach this challenge using techniques and libraries you're comfortable with. While completing all requirements is ideal, we value quality work on individual components.
@@ -51,5 +54,6 @@ Feel free to approach this challenge using techniques and libraries you're comfo
 ### Advanced Skills (Bonus Points)
 - Understand and follow the current application structure which using Laravel Modules [nwidart/laravel-modules](https://laravelmodules.com)
 - Write actions to handle business logic using [https://www.laravelactions.com](https://www.laravelactions.com/)
+- Using Nuxt & Nuxt UI to implement the frontend. [https://nuxt.com](https://nuxt.com/) [https://ui.nuxt.com/](https://ui.nuxt.com/)
 
 Good luck! We're excited to see your approach to this challenge. Feel free to ask questions if anything isn't clear.
