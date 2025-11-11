@@ -209,6 +209,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Staff',
+                'Courses',
                 'Settings',
                 'Logs',
             ])
