@@ -12,11 +12,11 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Employee Registration - Greenhat',
+      title: 'Employee Portal - Greenhat',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Register as a new employee at Greenhat' }
+        { name: 'description', content: 'Greenhat Employee Portal - Register, browse and enroll in courses' }
       ]
     }
   },

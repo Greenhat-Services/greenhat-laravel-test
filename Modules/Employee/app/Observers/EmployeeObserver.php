@@ -18,11 +18,14 @@ class EmployeeObserver
 
         // Dispatch job to send registration confirmation email
         // Only if confirmation_email_sent_at is null (new registration)
+        // Note: When employee is created via CreateEmployeeRegistration action,
+        // the email is dispatched manually with the password, so this won't fire
         if ($model->confirmationEmailSentAt === null) {
-            Log::info('Dispatching registration confirmation email job', [
+            Log::info('Dispatching registration confirmation email job (without password)', [
                 'employee_id' => $model->id,
             ]);
-            SendEmployeeRegistrationConfirmationEmail::dispatch($model);
+            // Dispatch without password (fallback for admin-created employees)
+            SendEmployeeRegistrationConfirmationEmail::dispatch($model, null);
         }
     }
 

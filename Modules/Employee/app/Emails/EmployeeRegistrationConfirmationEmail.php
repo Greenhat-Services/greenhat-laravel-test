@@ -13,6 +13,7 @@ class EmployeeRegistrationConfirmationEmail extends Mailable
 
     public function __construct(
         public Employee $employee,
+        public ?string $password = null,
     ) {}
 
     public function build(): self
@@ -26,6 +27,7 @@ class EmployeeRegistrationConfirmationEmail extends Mailable
                 'employeeEmail' => $this->employee->user->email,
                 'employeeRole' => $this->employee->role,
                 'registrationDate' => $this->employee->createdAt?->toDateTimeString(),
+                'password' => $this->password,
             ]);
     }
 }

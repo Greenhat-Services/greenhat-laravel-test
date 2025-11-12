@@ -17,8 +17,8 @@ class EnrollEmployeeData extends Data
     public function __construct(
         #[Required, IntegerType, Exists('courses', 'id')]
         public int $courseId,
-        #[Required, IntegerType, Exists('employees', 'id')]
-        public int $employeeId,
+        #[IntegerType, Exists('employees', 'id')]
+        public int|Optional|null $employeeId,
         #[Max(1000)]
         public string|null|Optional $notes,
     ) {}

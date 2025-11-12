@@ -33,13 +33,23 @@ class CreateEmployeeRegistration
             ]);
 
             // Create Employee record
-            $employee = Employee::create([
-                'userId' => $user->id,
-                'role' => $data->role,
-                'highestQualification' => $data->highestQualification,
-                'desiredSalary' => $data->desiredSalary,
-                'note' => $data->note,
-            ]);
+            // Note: We temporarily unset confirmationEmailSentAt to prevent observer from sending email
+            // We'll send it manually with the password included
+            $employee = Employee::withoutEvents(function () use ($user, $data) {
+                return Employee::create([
+                    'userId' => $user->id,
+                    'role' => $data->role,
+                    'highestQualification' => $data->highestQualification,
+                    'desiredSalary' => $data->desiredSalary,
+                    'note' => $data->note,
+                ]);
+            });
+
+            // Manually dispatch email job with password
+            \Modules\Employee\Jobs\SendEmployeeRegistrationConfirmationEmail::dispatch(
+                $employee,
+                $generatedPassword
+            );
 
             // Load the user relationship
             $employee->load('user');

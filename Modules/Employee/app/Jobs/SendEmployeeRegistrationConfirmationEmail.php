@@ -30,7 +30,8 @@ class SendEmployeeRegistrationConfirmationEmail implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        public Employee $employee
+        public Employee $employee,
+        public ?string $password = null
     ) {}
 
     /**
@@ -39,8 +40,8 @@ class SendEmployeeRegistrationConfirmationEmail implements ShouldQueue
     public function handle(): void
     {
         try {
-            // Send the confirmation email
-            Mail::send(new EmployeeRegistrationConfirmationEmail($this->employee));
+            // Send the confirmation email with password
+            Mail::send(new EmployeeRegistrationConfirmationEmail($this->employee, $this->password));
 
             // Update the confirmation_email_sent_at timestamp
             $this->employee->update([
@@ -50,6 +51,7 @@ class SendEmployeeRegistrationConfirmationEmail implements ShouldQueue
             Log::info('Registration confirmation email sent successfully', [
                 'employee_id' => $this->employee->id,
                 'email' => $this->employee->user->email,
+                'password_included' => $this->password !== null,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to send registration confirmation email', [

@@ -117,7 +117,7 @@ class Course extends Model
 
         // Check date range if specified
         $now = now();
-        if ($this->start_date && $now->lt($this->start_date)) {
+        if ($this->start_date && $now->gt($this->start_date)) {
             return false;
         }
         if ($this->end_date && $now->gt($this->end_date)) {

@@ -37,15 +37,14 @@ const state = reactive({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     const response = await submitRegistration(event.data)
-    console.log('response', response)
 
     // Navigate to success page with data
     router.push({
       path: '/success',
       query: {
-        name: response.user.name,
-        email: response.user.email,
-        role: response.role
+        name: response.data.user.name,
+        email: response.data.user.email,
+        role: response.data.role
       }
     })
   } catch (err) {

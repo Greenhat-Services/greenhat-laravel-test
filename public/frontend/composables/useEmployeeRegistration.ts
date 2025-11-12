@@ -28,9 +28,9 @@ export interface RegistrationResponse {
       updatedAt: string
     }
   }
-  meta: {
-    success: boolean
-    message: string
+  meta?: {
+    success?: boolean
+    message?: string
   }
 }
 
@@ -53,7 +53,7 @@ export const useEmployeeRegistration = () => {
     responseData.value = null
 
     try {
-      const response = await $fetch<RegistrationResponse>(
+      const response = await $fetch<RegistrationResponse | RegistrationResponse['data']>(
         '/v1/employee-registration',
         {
           method: 'POST',
@@ -67,8 +67,20 @@ export const useEmployeeRegistration = () => {
       )
 
       success.value = true
-      responseData.value = response
-      return response
+
+      // Handle both Fractal format (with data wrapper) and plain object
+      if ('data' in response && response.data && typeof response.data === 'object' && 'user' in response.data) {
+        // Fractal response with data wrapper
+        responseData.value = response as RegistrationResponse
+        return response as RegistrationResponse
+      } else {
+        // Plain response object (no Fractal wrapper) - wrap it
+        const wrappedResponse: RegistrationResponse = {
+          data: response as RegistrationResponse['data']
+        }
+        responseData.value = wrappedResponse
+        return wrappedResponse
+      }
     } catch (err: any) {
       // Handle validation errors
       if (err.data) {

@@ -26,7 +26,9 @@ class ReadEmployeeAuthUser
 
     public function jsonResponse(User $data): Fractal
     {
+        $includes = request()->get('include', 'employee');
+
         return fractal($data, UserTransformer::class)
-            ->parseIncludes('employee');
+            ->parseIncludes($includes);
     }
 }

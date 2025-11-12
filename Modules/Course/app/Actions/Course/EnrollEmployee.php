@@ -17,6 +17,18 @@ class EnrollEmployee
 
     public function handle(EnrollEmployeeData $data): CourseEnrollment
     {
+        // Convert Optional to actual value or throw error
+        $employeeId = $data->employeeId instanceof \Spatie\LaravelData\Optional
+            ? null
+            : $data->employeeId;
+
+        if ($employeeId === null) {
+            throw new CourseEnrollmentException(
+                'Employee ID is required for enrollment',
+                422
+            );
+        }
+
         $course = Course::findOrFail($data->courseId);
 
         // Check if course is published
@@ -46,7 +58,7 @@ class EnrollEmployee
 
         // Check for duplicate enrollment
         $existingEnrollment = CourseEnrollment::where('course_id', $data->courseId)
-            ->where('employee_id', $data->employeeId)
+            ->where('employee_id', $employeeId)
             ->whereIn('status', ['enrolled', 'in_progress'])
             ->first();
 
@@ -57,11 +69,16 @@ class EnrollEmployee
             );
         }
 
+        // Handle Optional notes
+        $notes = $data->notes instanceof \Spatie\LaravelData\Optional
+            ? null
+            : $data->notes;
+
         // Create enrollment
         $enrollment = CourseEnrollment::create([
             'course_id' => $data->courseId,
-            'employee_id' => $data->employeeId,
-            'notes' => $data->notes ?? null,
+            'employee_id' => $employeeId,
+            'notes' => $notes,
             'status' => 'enrolled',
             'enrolled_at' => now(),
             'progress_percentage' => 0,
@@ -74,15 +91,49 @@ class EnrollEmployee
 
     public function authorize(ActionRequest $request): bool
     {
-        // Public access for testing
-        return true;
+        $user = $request->user();
+
+        // Allow admins to enroll any employee
+        if ($user->isAn('admin')) {
+            return true;
+        }
+
+        // Employees can only enroll themselves
+        if ($user->isAn('employee')) {
+            $requestedEmployeeId = $request->input('employee_id') ?? $request->input('employeeId');
+
+            // If employeeId is provided, ensure they're enrolling themselves
+            if ($requestedEmployeeId) {
+                return $user->employee && $user->employee->id == $requestedEmployeeId;
+            }
+
+            // If no employeeId provided, it will be auto-populated with their own ID
+            return $user->employee !== null;
+        }
+
+        return false;
     }
 
     public function asController(ActionRequest $request): CourseEnrollment
     {
-        $data = EnrollEmployeeData::validateAndCreate($request->all());
+        $data = $request->all();
 
-        return $this->handle($data);
+        $employee = $request->user()->employee;
+
+        if (!$employee) {
+            throw new CourseEnrollmentException(
+                'User does not have an associated employee record',
+                422
+            );
+        }
+
+        // Set both variants to ensure it's picked up by validation
+        $data['employeeId'] = $employee->id;
+        $data['employee_id'] = $employee->id;
+
+        $enrollData = EnrollEmployeeData::validateAndCreate($data);
+
+        return $this->handle($enrollData);
     }
 
     public function jsonResponse(CourseEnrollment $enrollment): Fractal
